@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.3.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/blog/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/blog/uploads/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/blog/uploads/favicon.ico">
+  <link rel="mask-icon" href="/blog/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/blog/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css" integrity="sha256-AbA177XfpSnFEvgpYu1jMygiLabzPCJCRIBtR5jGc0k=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"dunwu.github.io","root":"/blog/","images":"/blog/images","scheme":"Pisces","darkmode":true,"version":"8.13.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":{"enable":false,"style":null},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"gitalk","storage":true,"lazyload":true,"nav":null,"activeClass":"gitalk"},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/blog/search.xml","localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/blog/js/config.js"></script>
+
+    <meta name="description" content="SpringBoot 之 JDBC简介Spring Data 包含对 JDBC 的存储库支持，并将自动为 CrudRepository 上的方法生成 SQL。对于更高级的查询，提供了 @Query 注解。 当 classpath 上存在必要的依赖项时，Spring Boot 将自动配置 Spring Data 的 JDBC 存储库。它们可以通过 spring-boot-starter-data-j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot 之 JDBC">
+<meta property="og:url" content="https://dunwu.github.io/blog/pages/cf19fd/index.html">
+<meta property="og:site_name" content="Dunwu Blog">
+<meta property="og:description" content="SpringBoot 之 JDBC简介Spring Data 包含对 JDBC 的存储库支持，并将自动为 CrudRepository 上的方法生成 SQL。对于更高级的查询，提供了 @Query 注解。 当 classpath 上存在必要的依赖项时，Spring Boot 将自动配置 Spring Data 的 JDBC 存储库。它们可以通过 spring-boot-starter-data-j">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-02-18T06:33:55.000Z">
+<meta property="article:modified_time" content="2022-09-23T10:54:25.504Z">
+<meta property="article:author" content="钝悟 ◾ Dunwu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="框架">
+<meta property="article:tag" content="JDBC">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://dunwu.github.io/blog/pages/cf19fd/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://dunwu.github.io/blog/pages/cf19fd/","path":"/pages/cf19fd/","title":"SpringBoot 之 JDBC"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>SpringBoot 之 JDBC | Dunwu Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/blog/css/noscript.css">
+  </noscript>
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/blog/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">Dunwu Blog</p>
+      <i class="logo-line"></i>
+    </a>
+      <p class="site-subtitle" itemprop="description">大道至简，知易行难</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/blog/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/blog/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/blog/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签<span class="badge">258</span></a></li><li class="menu-item menu-item-categories"><a href="/blog/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">118</span></a></li><li class="menu-item menu-item-archives"><a href="/blog/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档<span class="badge">365</span></a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup"><div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off" maxlength="80"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close" role="button">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div class="search-result-container no-result">
+  <div class="search-result-icon">
+    <i class="fa fa-spinner fa-pulse fa-5x"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringBoot-%E4%B9%8B-JDBC"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot 之 JDBC</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%80%E4%BB%8B"><span class="nav-number">1.1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API"><span class="nav-number">1.2.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#execute"><span class="nav-number">1.2.1.</span> <span class="nav-text">execute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#update"><span class="nav-number">1.2.2.</span> <span class="nav-text">update</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#query"><span class="nav-number">1.2.3.</span> <span class="nav-text">query</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E6%88%98"><span class="nav-number">1.3.</span> <span class="nav-text">实战</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%85%8D%E7%BD%AE%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="nav-number">1.3.1.</span> <span class="nav-text">配置数据源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%A8%E5%85%A5-JdbcTemplate"><span class="nav-number">1.3.2.</span> <span class="nav-text">注入 JdbcTemplate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%8C%E6%95%B4%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.3.3.</span> <span class="nav-text">完整示例</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E7%94%B3%E5%92%8C%E5%BC%95%E7%94%A8"><span class="nav-number">1.4.</span> <span class="nav-text">引申和引用</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="钝悟 ◾ Dunwu"
+      src="/blog/uploads/avatar.gif">
+  <p class="site-author-name" itemprop="name">钝悟 ◾ Dunwu</p>
+  <div class="site-description" itemprop="description">钝悟的个人博客</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/blog/archives/">
+          <span class="site-state-item-count">365</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/blog/categories/">
+        <span class="site-state-item-count">118</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/blog/tags/">
+        <span class="site-state-item-count">258</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author site-overview-item animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/dunwu" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;dunwu" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:forbreak@163.com" title="E-Mail → mailto:forbreak@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license site-overview-item animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdn.jsdelivr.net/npm/@creativecommons/vocabulary@2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+        </div>
+      </div>
+        <div class="back-to-top animated" role="button" aria-label="返回顶部">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="reading-progress-bar"></div>
+
+  <a href="https://github.com/dunwu/blog" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dunwu.github.io/blog/pages/cf19fd/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/blog/uploads/avatar.gif">
+      <meta itemprop="name" content="钝悟 ◾ Dunwu">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Dunwu Blog">
+      <meta itemprop="description" content="钝悟的个人博客">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="SpringBoot 之 JDBC | Dunwu Blog">
+      <meta itemprop="description" content="">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          SpringBoot 之 JDBC<a href="https://github.com/dunwu/blog/blob/master/source/_posts/01.Java/13.%E6%A1%86%E6%9E%B6/02.SpringBoot/03.SpringBoot%E6%95%B0%E6%8D%AE/01.SpringBoot%E4%B9%8BJDBC.md" class="post-edit-link" title="编辑" rel="noopener" target="_blank"><i class="fa fa-pen-nib"></i></a>
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2019-02-18 14:33:55" itemprop="dateCreated datePublished" datetime="2019-02-18T14:33:55+08:00">2019-02-18</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-09-23 18:54:25" itemprop="dateModified" datetime="2022-09-23T18:54:25+08:00">2022-09-23</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/" itemprop="url" rel="index"><span itemprop="name">Java</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/%E6%A1%86%E6%9E%B6/" itemprop="url" rel="index"><span itemprop="name">框架</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/%E6%A1%86%E6%9E%B6/SpringBoot/" itemprop="url" rel="index"><span itemprop="name">SpringBoot</span></a>
+        </span>
+          ，
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/blog/categories/Java/%E6%A1%86%E6%9E%B6/SpringBoot/SpringBoot%E6%95%B0%E6%8D%AE/" itemprop="url" rel="index"><span itemprop="name">SpringBoot数据</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-break"></span>
+    <span class="post-meta-item" title="本文字数">
+      <span class="post-meta-item-icon">
+        <i class="far fa-file-word"></i>
+      </span>
+      <span class="post-meta-item-text">本文字数：</span>
+      <span>3.7k</span>
+    </span>
+    <span class="post-meta-item" title="阅读时长">
+      <span class="post-meta-item-icon">
+        <i class="far fa-clock"></i>
+      </span>
+      <span class="post-meta-item-text">阅读时长 &asymp;</span>
+      <span>3 分钟</span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="SpringBoot-之-JDBC"><a href="#SpringBoot-之-JDBC" class="headerlink" title="SpringBoot 之 JDBC"></a>SpringBoot 之 JDBC</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>Spring Data 包含对 JDBC 的存储库支持，并将自动为 <code>CrudRepository</code> 上的方法生成 SQL。对于更高级的查询，提供了 <code>@Query</code> 注解。</p>
+<p>当 classpath 上存在必要的依赖项时，Spring Boot 将自动配置 Spring Data 的 JDBC 存储库。它们可以通过 <code>spring-boot-starter-data-jdbc</code> 的单一依赖项添加到项目中。如有必要，可以通过将 <code>@EnableJdbcRepositories</code> 批注或 <code>JdbcConfiguration</code> 子类添加到应用程序来控制 Spring Data JDBC 的配置。</p>
+<blockquote>
+<p>更多 Spring Data JDBC 细节，可以参考 <a target="_blank" rel="noopener" href="http://spring.io/projects/spring-data-jdbc">Spring Data JDBC 官方文档</a>。</p>
+</blockquote>
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><p><code>spring-boot-starter-data-jdbc</code> 引入了 <code>spring-jdbc</code> ，其 JDBC 特性就是基于 <code>spring-jdbc</code>。</p>
+<p>而 <code>spring-jdbc</code> 最核心的 API 无疑就是 <code>JdbcTemplate</code>，可以说所有的 JDBC 数据访问，几乎都是围绕着这个类去工作的。</p>
+<p>Spring 对数据库的操作在 Jdbc 层面做了深层次的封装，利用依赖注入，把数据源配置装配到 <code>JdbcTemplate</code> 中，再由 <code>JdbcTemplate</code> 负责具体的数据访问。</p>
+<p><code>JdbcTemplate</code> 主要提供以下几类方法：</p>
+<ul>
+<li><code>execute</code> 方法：可以用于执行任何 SQL 语句，一般用于执行 DDL 语句；</li>
+<li><code>update</code> 方法及 <code>batchUpdate</code> 方法：<code>update</code> 方法用于执行新增、修改、删除等语句；<code>batchUpdate</code> 方法用于执行批处理相关语句；</li>
+<li><code>query</code> 方法及 <code>queryForXXX</code> 方法：用于执行查询相关语句；</li>
+<li><code>call</code> 方法：用于执行存储过程、函数相关语句。</li>
+</ul>
+<p>为了方便演示，以下增删改查操作都围绕一个名为 user 的表（该表的主键 id 是自增序列）进行，该表的数据实体如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 省略 getter/setter</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>数据实体只要是一个纯粹的 Java Bean 即可，无需任何注解修饰。</p>
+<h3 id="execute"><a href="#execute" class="headerlink" title="execute"></a>execute</h3><p>使用 execute 执行 DDL 语句，创建一个名为 test 的数据库，并在此数据库下新建一个名为 user 的表。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">recreateTable</span><span class="params">()</span> &#123;</span><br><span class="line">    jdbcTemplate.execute(<span class="string">&quot;DROP DATABASE IF EXISTS test&quot;</span>);</span><br><span class="line">    jdbcTemplate.execute(<span class="string">&quot;CREATE DATABASE test&quot;</span>);</span><br><span class="line">    jdbcTemplate.execute(<span class="string">&quot;USE test&quot;</span>);</span><br><span class="line">    jdbcTemplate.execute(<span class="string">&quot;DROP TABLE if EXISTS user&quot;</span>);</span><br><span class="line">    jdbcTemplate.execute(<span class="string">&quot;DROP TABLE if EXISTS user&quot;</span>);</span><br><span class="line">    <span class="comment">// @formatter:off</span></span><br><span class="line">    <span class="type">StringBuilder</span> <span class="variable">sb</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">    sb.append(<span class="string">&quot;CREATE TABLE user (id int (10) unsigned NOT NULL AUTO_INCREMENT,\n&quot;</span>)</span><br><span class="line">        .append(<span class="string">&quot;name varchar (64) NOT NULL DEFAULT &#x27;&#x27;,\n&quot;</span>)</span><br><span class="line">        .append(<span class="string">&quot;age tinyint (3) NOT NULL DEFAULT 0,\n&quot;</span>)</span><br><span class="line">        .append(<span class="string">&quot;PRIMARY KEY (ID));\n&quot;</span>);</span><br><span class="line">    <span class="comment">// @formatter:on</span></span><br><span class="line">    jdbcTemplate.execute(sb.toString());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="update"><a href="#update" class="headerlink" title="update"></a>update</h3><p>新增数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">insert</span><span class="params">(String name, Integer age)</span> &#123;</span><br><span class="line">    jdbcTemplate.update(<span class="string">&quot;INSERT INTO user(name, age) VALUES(?, ?)&quot;</span>, name, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>删除数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">delete</span><span class="params">(String name)</span> &#123;</span><br><span class="line">    jdbcTemplate.update(<span class="string">&quot;DELETE FROM user WHERE name = ?&quot;</span>, name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>修改数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    jdbcTemplate.update(<span class="string">&quot;UPDATE USER SET name=?, age=? WHERE id=?&quot;</span>, user.getName(), user.getAge(), user.getId());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>批处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">batchInsert</span><span class="params">(List&lt;User&gt; users)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;INSERT INTO user(name, age) VALUES(?, ?)&quot;</span>;</span><br><span class="line"></span><br><span class="line">    List&lt;Object[]&gt; params = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    users.forEach(item -&gt; &#123;</span><br><span class="line">        params.add(<span class="keyword">new</span> <span class="title class_">Object</span>[] &#123;item.getName(), item.getAge()&#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    jdbcTemplate.batchUpdate(sql, params);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="query"><a href="#query" class="headerlink" title="query"></a>query</h3><p>查单个对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> User <span class="title function_">queryByName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate</span><br><span class="line">            .queryForObject(<span class="string">&quot;SELECT * FROM user WHERE name = ?&quot;</span>, <span class="keyword">new</span> <span class="title class_">BeanPropertyRowMapper</span>&lt;&gt;(User.class), name);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (EmptyResultDataAccessException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>查多个对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> List&lt;User&gt; <span class="title function_">list</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> jdbcTemplate.query(<span class="string">&quot;select * from USER&quot;</span>, <span class="keyword">new</span> <span class="title class_">BeanPropertyRowMapper</span>(User.class));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取某个记录某列或者 count、avg、sum 等函数返回唯一值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> Integer <span class="title function_">count</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.queryForObject(<span class="string">&quot;SELECT COUNT(*) FROM user&quot;</span>, Integer.class);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (EmptyResultDataAccessException e) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><h3 id="配置数据源"><a href="#配置数据源" class="headerlink" title="配置数据源"></a>配置数据源</h3><p>在 <code>src/main/resource</code> 目录下添加 <code>application.properties</code> 配置文件，内容如下：</p>
+<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring.datasource.url</span> = <span class="string">jdbc:mysql://localhost:3306/spring_boot_tutorial?serverTimezone=UTC&amp;useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false</span></span><br><span class="line"><span class="attr">spring.datasource.username</span> = <span class="string">root</span></span><br><span class="line"><span class="attr">spring.datasource.password</span> = <span class="string">root</span></span><br><span class="line"><span class="attr">spring.datasource.driver-class-name</span> = <span class="string">com.mysql.cj.jdbc.Driver</span></span><br></pre></td></tr></table></figure>
+
+<p>需要根据实际情况，替换 <code>url</code>、<code>username</code>、<code>password</code>。</p>
+<h3 id="注入-JdbcTemplate"><a href="#注入-JdbcTemplate" class="headerlink" title="注入 JdbcTemplate"></a>注入 JdbcTemplate</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserDAOImpl</span> <span class="keyword">implements</span> <span class="title class_">UserDAO</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">UserDAOImpl</span><span class="params">(JdbcTemplate jdbcTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="完整示例"><a href="#完整示例" class="headerlink" title="完整示例"></a>完整示例</h3><p>请参考：<a target="_blank" rel="noopener" href="https://github.com/dunwu/spring-boot-tutorial/tree/master/codes/spring-boot-data-jdbc">源码</a></p>
+<h2 id="引申和引用"><a href="#引申和引用" class="headerlink" title="引申和引用"></a>引申和引用</h2><p><strong>引申</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/dunwu/spring-boot-tutorial">Spring Boot 教程</a></li>
+</ul>
+<p><strong>参考</strong></p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/#boot-features-data-jdbc">Spring Boot 官方文档之 boot-features-data-jdbc</a></li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          
+
+<div class="post-copyright">
+<ul>
+  <li class="post-copyright-author">
+      <strong>本文作者： </strong>钝悟 ◾ Dunwu
+  </li>
+  <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://dunwu.github.io/blog/pages/cf19fd/" title="SpringBoot 之 JDBC">https://dunwu.github.io/blog/pages/cf19fd/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+          <div class="post-tags">
+              <a href="/blog/tags/Java/" rel="tag"># Java</a>
+              <a href="/blog/tags/%E6%A1%86%E6%9E%B6/" rel="tag"># 框架</a>
+              <a href="/blog/tags/JDBC/" rel="tag"># JDBC</a>
+              <a href="/blog/tags/Spring/" rel="tag"># Spring</a>
+              <a href="/blog/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/blog/pages/0fb992/" rel="prev" title="SpringBoot 之属性加载详解">
+                  <i class="fa fa-chevron-left"></i> SpringBoot 之属性加载详解
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/blog/pages/847c99/" rel="next" title="计算机网络指南">
+                  计算机网络指南 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+    <div class="comments gitalk-container"></div>
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 2015 – 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">钝悟 ◾ Dunwu</span>
+</div>
+<div class="wordcount">
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-line"></i>
+    </span>
+      <span>站点总字数：</span>
+    <span title="站点总字数">2.8m</span>
+  </span>
+  <span class="post-meta-item">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+      <span>站点阅读时长 &asymp;</span>
+    <span title="站点阅读时长">42:59</span>
+  </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+<script src="/blog/js/comments.js"></script><script src="/blog/js/utils.js"></script><script src="/blog/js/motion.js"></script><script src="/blog/js/next-boot.js"></script>
+
+  
+<script src="https://cdn.jsdelivr.net/npm/hexo-generator-searchdb@1.4.0/dist/search.js" integrity="sha256-vXZMYLEqsROAXkEw93GGIvaB2ab+QW6w3+1ahD9nXXA=" crossorigin="anonymous"></script>
+<script src="/blog/js/third-party/search/local-search.js"></script>
+
+
+
+
+  <script src="/blog/js/third-party/pace.js"></script>
+
+  
+
+
+
+
+<script src="https://unpkg.com/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '64px',
+  right: 'unset',
+  left: '32px',
+  time: '0.5s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.css" integrity="sha256-AJnUHL7dBv6PGaeyPQJcgQPDjt/Hn/PvYZde1iqfp8U=" crossorigin="anonymous">
+
+<script class="next-config" data-name="gitalk" type="application/json">{"enable":true,"github_id":"dunwu","repo":"blog","client_id":"c45bc13ca1d3d3aa4836","client_secret":"1907a9f0c22087badad3938e1d7dcba9078f88ac","admin_user":"dunwu","distraction_free_mode":true,"proxy":"https://cors-anywhere.azm.workers.dev/https://github.com/login/oauth/access_token","language":"zh-CN","js":{"url":"https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js","integrity":"sha256-MVK9MGD/XJaGyIghSVrONSnoXoGh3IFxLw0zfvzpxR4="},"path_md5":"6f988164f033c2769b421d4a5b86fcfc"}</script>
+<script src="/blog/js/third-party/comments/gitalk.js"></script>
+
+</body>
+</html>
