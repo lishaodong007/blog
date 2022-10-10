@@ -1,35 +1,3 @@
-<p align="center">
-    <a href="https://dunwu.github.io/blog/" target="_blank" rel="noopener noreferrer">
-        <img src="https://raw.githubusercontent.com/dunwu/images/dev/common/dunwu-logo.png" alt="logo" width="150px"/>
-    </a>
-</p>
-
-<p align="center">
-
-  <a href="https://github.com/dunwu/blog">
-      <img alt="star" class="no-zoom" src="https://img.shields.io/github/stars/dunwu/blog?style=for-the-badge">
-  </a>
-
-  <a href="https://github.com/dunwu/blog">
-      <img alt="fork" class="no-zoom" src="https://img.shields.io/github/forks/dunwu/blog?style=for-the-badge">
-  </a>
-
-  <a href="https://github.com/dunwu/blog/commits/master">
-      <img alt="commit" class="no-zoom" src="https://img.shields.io/github/workflow/status/dunwu/blog/CI?style=for-the-badge">
-  </a>
-
-  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">
-      <img alt="code style" class="no-zoom" src="https://img.shields.io/github/license/dunwu/blog?style=for-the-badge">
-  </a>
-
-</p>
-
-<h1 align="center">blog</h1>
-
-> 💧 [Blog](https://github.com/dunwu/blog/) 是一个十年 Java 程序员的博客。
->
-> - 🔁 项目同步维护：[Github](https://github.com/dunwu/blog/) | [Gitee](https://gitee.com/turnon/blog/)
-> - 📖 电子书阅读：[Github Pages](https://dunwu.github.io/blog/) | [Gitee Pages](https://turnon.gitee.io/blog/)
 
 ## Java
 
